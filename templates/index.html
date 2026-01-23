@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plant E-Commerce Store</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .navbar {
+            background: linear-gradient(135deg, #2d5016 0%, #3a6b1f 100%);
+        }
+        .hero {
+            background: linear-gradient(135deg, #4a7c2c 0%, #5e9a36 100%);
+            color: white;
+            padding: 3rem 0;
+            margin-bottom: 2rem;
+        }
+        .card {
+            transition: transform 0.2s, box-shadow 0.2s;
+            height: 100%;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+        }
+        .price {
+            color: #2d5016;
+            font-weight: bold;
+            font-size: 1.3rem;
+        }
+        .category-badge {
+            background-color: #5e9a36;
+        }
+        .search-bar {
+            max-width: 500px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-dark navbar-expand-lg">
+        <div class="container">
+            <a class="navbar-brand" href="/">
+                <i class="bi bi-flower1"></i> Plant Store
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/cart">
+                            <i class="bi bi-cart"></i> Cart 
+                            {% if cart_count > 0 %}
+                            <span class="badge bg-warning text-dark">{{ cart_count }}</span>
+                            {% endif %}
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <div class="hero">
+        <div class="container text-center">
+            <h1 class="display-4"><i class="bi bi-flower2"></i> Welcome to Plant Paradise</h1>
+            <p class="lead">Discover beautiful plants for your home and garden</p>
+        </div>
+    </div>
+
+    <!-- Search Bar -->
+    <div class="container mb-4">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <form action="/" method="get" class="search-bar">
+                    <div class="input-group input-group-lg">
+                        <input type="text" class="form-control" name="search" 
+                               placeholder="Search for plants..." value="{{ search_query }}">
+                        <button class="btn btn-success" type="submit">
+                            <i class="bi bi-search"></i> Search
+                        </button>
+                        {% if search_query %}
+                        <a href="/" class="btn btn-outline-secondary">
+                            <i class="bi bi-x-circle"></i> Clear
+                        </a>
+                        {% endif %}
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Products Grid -->
+    <div class="container mb-5">
+        {% if search_query %}
+        <h3 class="mb-4">Search results for "{{ search_query }}"</h3>
+        {% endif %}
+        
+        {% if plants %}
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 g-4">
+            {% for plant in plants %}
+            <div class="col">
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <span class="badge category-badge mb-2">{{ plant.category }}</span>
+                        <h5 class="card-title">{{ plant.name }}</h5>
+                        <p class="card-text text-muted">{{ plant.description }}</p>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="price">₹{{ "%.2f"|format(plant.price) }}</span>
+                            <form action="/add_to_cart/{{ plant.id }}" method="post" style="display: inline;">
+                                <button type="submit" class="btn btn-success">
+                                    <i class="bi bi-cart-plus"></i> Add to Cart
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="alert alert-info text-center" role="alert">
+            <i class="bi bi-info-circle"></i> No plants found matching your search. Try a different term!
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-white text-center py-4 mt-5">
+        <div class="container">
+            <p class="mb-0">&copy; 2026 Plant Store. All rights reserved.</p>
+            <p class="mb-0">Grow your green thumb with us! <i class="bi bi-heart-fill text-danger"></i></p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
